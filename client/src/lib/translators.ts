@@ -115,35 +115,6 @@ export const translators = {
     }
   },
 
-  bacon: {
-    encode: (text: string): string => {
-      const baconMap: Record<string, string> = {
-        'A': 'AAAAA', 'B': 'AAAAB', 'C': 'AAABA', 'D': 'AAABB', 'E': 'AABAA',
-        'F': 'AABAB', 'G': 'AABBA', 'H': 'AABBB', 'I': 'ABAAA', 'J': 'ABAAB',
-        'K': 'ABABA', 'L': 'ABABB', 'M': 'ABBAA', 'N': 'ABBAB', 'O': 'ABBBA',
-        'P': 'ABBBB', 'Q': 'BAAAA', 'R': 'BAAAB', 'S': 'BAABA', 'T': 'BAABB',
-        'U': 'BABAA', 'V': 'BABAB', 'W': 'BABBA', 'X': 'BABBB', 'Y': 'BBAAA',
-        'Z': 'BBAAB'
-      };
-      return text.toUpperCase().split('').map(char => baconMap[char] || char).join(' ');
-    },
-    decode: (bacon: string): string => {
-      const baconMap: Record<string, string> = {
-        'A': 'AAAAA', 'B': 'AAAAB', 'C': 'AAABA', 'D': 'AAABB', 'E': 'AABAA',
-        'F': 'AABAB', 'G': 'AABBA', 'H': 'AABBB', 'I': 'ABAAA', 'J': 'ABAAB',
-        'K': 'ABABA', 'L': 'ABABB', 'M': 'ABBAA', 'N': 'ABBAB', 'O': 'ABBBA',
-        'P': 'ABBBB', 'Q': 'BAAAA', 'R': 'BAAAB', 'S': 'BAABA', 'T': 'BAABB',
-        'U': 'BABAA', 'V': 'BABAB', 'W': 'BABBA', 'X': 'BABBB', 'Y': 'BBAAA',
-        'Z': 'BBAAB'
-      };
-      // Create reverse mapping
-      const reverseBaconMap: Record<string, string> = {};
-      for (const [char, code] of Object.entries(baconMap)) {
-        reverseBaconMap[code] = char;
-      }
-      return bacon.split(' ').map(code => reverseBaconMap[code] || code).join('');
-    }
-  },
   caesar: {
     encode: (text: string, shift: number = 3): string => {
       return text.split('').map(char => {
@@ -208,4 +179,104 @@ export const translators = {
     }
   },
 
+  oneZeroOne: {
+    encode: (text: string, method: string = 'simplified'): string => {
+      const codeMap: Record<string, { simplified: string; xMethod: string; unsimplified: string }> = {
+        'A': { simplified: '1', xMethod: 'X1', unsimplified: '1' },
+        'B': { simplified: '2', xMethod: 'X2', unsimplified: '2' },
+        'C': { simplified: '3', xMethod: 'X3', unsimplified: '3' },
+        'D': { simplified: '4', xMethod: 'X4', unsimplified: '4' },
+        'E': { simplified: '5', xMethod: 'X5', unsimplified: '5' },
+        'F': { simplified: '6', xMethod: 'X6', unsimplified: '6' },
+        'G': { simplified: '7', xMethod: 'X7', unsimplified: '7' },
+        'H': { simplified: '8', xMethod: 'X8', unsimplified: '8' },
+        'I': { simplified: '9', xMethod: 'X9', unsimplified: '9' },
+        'J': { simplified: '1X', xMethod: '1X', unsimplified: '11' },
+        'K': { simplified: '2X', xMethod: '2X', unsimplified: '22' },
+        'L': { simplified: '3X', xMethod: '3X', unsimplified: '33' },
+        'M': { simplified: '4X', xMethod: '4X', unsimplified: '44' },
+        'N': { simplified: '5X', xMethod: '5X', unsimplified: '55' },
+        'O': { simplified: '6X', xMethod: '6X', unsimplified: '66' },
+        'P': { simplified: '7X', xMethod: '7X', unsimplified: '77' },
+        'Q': { simplified: '8X', xMethod: '8X', unsimplified: '88' },
+        'R': { simplified: '9X', xMethod: '9X', unsimplified: '99' },
+        'S': { simplified: '1Z', xMethod: '1XX', unsimplified: '111' },
+        'T': { simplified: '2Z', xMethod: '2XX', unsimplified: '222' },
+        'U': { simplified: '3Z', xMethod: '3XX', unsimplified: '333' },
+        'V': { simplified: '4Z', xMethod: '4XX', unsimplified: '444' },
+        'W': { simplified: '5Z', xMethod: '5XX', unsimplified: '555' },
+        'X': { simplified: '6Z', xMethod: '6XX', unsimplified: '666' },
+        'Y': { simplified: '7Z', xMethod: '7XX', unsimplified: '777' },
+        'Z': { simplified: '8Z', xMethod: '8XX', unsimplified: '888' }
+      };
+
+      return text.toUpperCase().split('').map(char => {
+        if (char === ' ') return ' ';
+        const codes = codeMap[char];
+        return codes ? codes[method as keyof typeof codes] : char;
+      }).join('');
+    },
+    decode: (encoded: string, method: string = 'simplified'): string => {
+      const codeMap: Record<string, { simplified: string; xMethod: string; unsimplified: string }> = {
+        'A': { simplified: '1', xMethod: 'X1', unsimplified: '1' },
+        'B': { simplified: '2', xMethod: 'X2', unsimplified: '2' },
+        'C': { simplified: '3', xMethod: 'X3', unsimplified: '3' },
+        'D': { simplified: '4', xMethod: 'X4', unsimplified: '4' },
+        'E': { simplified: '5', xMethod: 'X5', unsimplified: '5' },
+        'F': { simplified: '6', xMethod: 'X6', unsimplified: '6' },
+        'G': { simplified: '7', xMethod: 'X7', unsimplified: '7' },
+        'H': { simplified: '8', xMethod: 'X8', unsimplified: '8' },
+        'I': { simplified: '9', xMethod: 'X9', unsimplified: '9' },
+        'J': { simplified: '1X', xMethod: '1X', unsimplified: '11' },
+        'K': { simplified: '2X', xMethod: '2X', unsimplified: '22' },
+        'L': { simplified: '3X', xMethod: '3X', unsimplified: '33' },
+        'M': { simplified: '4X', xMethod: '4X', unsimplified: '44' },
+        'N': { simplified: '5X', xMethod: '5X', unsimplified: '55' },
+        'O': { simplified: '6X', xMethod: '6X', unsimplified: '66' },
+        'P': { simplified: '7X', xMethod: '7X', unsimplified: '77' },
+        'Q': { simplified: '8X', xMethod: '8X', unsimplified: '88' },
+        'R': { simplified: '9X', xMethod: '9X', unsimplified: '99' },
+        'S': { simplified: '1Z', xMethod: '1XX', unsimplified: '111' },
+        'T': { simplified: '2Z', xMethod: '2XX', unsimplified: '222' },
+        'U': { simplified: '3Z', xMethod: '3XX', unsimplified: '333' },
+        'V': { simplified: '4Z', xMethod: '4XX', unsimplified: '444' },
+        'W': { simplified: '5Z', xMethod: '5XX', unsimplified: '555' },
+        'X': { simplified: '6Z', xMethod: '6XX', unsimplified: '666' },
+        'Y': { simplified: '7Z', xMethod: '7XX', unsimplified: '777' },
+        'Z': { simplified: '8Z', xMethod: '8XX', unsimplified: '888' }
+      };
+
+      // Create reverse mapping for the selected method
+      const reverseMap: Record<string, string> = {};
+      Object.entries(codeMap).forEach(([char, codes]) => {
+        reverseMap[codes[method as keyof typeof codes]] = char;
+      });
+
+      // Split the input into chunks that match the encoding pattern
+      let result = '';
+      let buffer = '';
+
+      for (let i = 0; i < encoded.length; i++) {
+        if (encoded[i] === ' ') {
+          if (buffer) {
+            result += reverseMap[buffer] || buffer;
+            buffer = '';
+          }
+          result += ' ';
+        } else {
+          buffer += encoded[i];
+          if (reverseMap[buffer]) {
+            result += reverseMap[buffer];
+            buffer = '';
+          }
+        }
+      }
+
+      if (buffer) {
+        result += reverseMap[buffer] || buffer;
+      }
+
+      return result;
+    }
+  },
 };

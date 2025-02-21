@@ -27,7 +27,7 @@ export const translationTypes = [
   "piglatin",
   "leetspeak",
   "atbash",
-  "bacon",
+  "oneZeroOne",
   "caesar",
   "vigenere"
 ] as const;

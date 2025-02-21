@@ -14,7 +14,7 @@ export default function Home() {
             Encrypt and decrypt your messages using various ciphers
           </p>
         </header>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <TranslatorCard
             title="Binary Translator"
@@ -52,9 +52,11 @@ export default function Home() {
             description="Simple substitution cipher (A→Z, B→Y, etc)"
           />
           <TranslatorCard
-            title="Bacon Cipher"
-            type="bacon"
-            description="Convert text to sequences of A's and B's"
+            title="101 Language"
+            type="oneZeroOne"
+            description="Custom number-based encoding with three methods (Simplified, X method, Unsimplified)"
+            requiresKey
+            keyPlaceholder="Enter method (simplified, xMethod, or unsimplified)"
           />
           <TranslatorCard
             title="Caesar Cipher"
