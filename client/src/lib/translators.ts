@@ -268,32 +268,39 @@ export const translators = {
           let result = '';
           let i = 0;
           while (i < word.length) {
-            // Try three consecutive digits first
-            if (i + 2 < word.length) {
-              const threeDigits = word[i].repeat(3);
-              const matchThree = Object.entries(codeMap).find(([_, v]) => v.unsimplified === threeDigits);
-              if (word.substring(i, i + 3) === threeDigits && matchThree) {
-                result += matchThree[0];
+            let matched = false;
+            
+            // Check for three consecutive same digits
+            if (i + 2 < word.length && 
+                word[i] === word[i + 1] && 
+                word[i] === word[i + 2]) {
+              const code = word.slice(i, i + 3);
+              const found = Object.entries(codeMap).find(([_, v]) => v.unsimplified === code);
+              if (found) {
+                result += found[0];
                 i += 3;
-                continue;
+                matched = true;
               }
             }
             
-            // Then try two consecutive digits
-            if (i + 1 < word.length) {
-              const twoDigits = word[i].repeat(2);
-              const matchTwo = Object.entries(codeMap).find(([_, v]) => v.unsimplified === twoDigits);
-              if (word.substring(i, i + 2) === twoDigits && matchTwo) {
-                result += matchTwo[0];
+            // If no triple match, check for two consecutive same digits
+            if (!matched && i + 1 < word.length && 
+                word[i] === word[i + 1]) {
+              const code = word.slice(i, i + 2);
+              const found = Object.entries(codeMap).find(([_, v]) => v.unsimplified === code);
+              if (found) {
+                result += found[0];
                 i += 2;
-                continue;
+                matched = true;
               }
             }
             
-            // Finally try single digit
-            const matchOne = Object.entries(codeMap).find(([_, v]) => v.unsimplified === word[i]);
-            result += matchOne ? matchOne[0] : word[i];
-            i++;
+            // If no double match, try single digit
+            if (!matched) {
+              const found = Object.entries(codeMap).find(([_, v]) => v.unsimplified === word[i]);
+              result += found ? found[0] : word[i];
+              i++;
+            }
           }
           return result;
         }).join(' ');
