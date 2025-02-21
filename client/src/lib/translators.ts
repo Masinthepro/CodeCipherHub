@@ -262,36 +262,38 @@ export const translators = {
         reverseMap[codes[normalizedMethod]] = letter;
       }
 
-      // For unsimplified method, we need to process numbers in groups of 3, 2, or 1
+      // For unsimplified method, we need to process numbers in groups
       if (normalizedMethod === 'unsimplified') {
         return encoded.split(' ').map(word => {
           let result = '';
           let i = 0;
-          const tryMatch = (digit: string, length: number) => {
-            if (i + length - 1 < word.length) {
-              const allSame = Array.from({ length }, (_, idx) => word[i + idx] === digit).every(Boolean);
-              if (allSame) {
-                const code = digit.repeat(length);
-                const found = Object.entries(codeMap).find(([_, v]) => v.unsimplified === code);
-                if (found) {
-                  result += found[0];
-                  i += length;
-                  return true;
-                }
+          while (i < word.length) {
+            // Try to match three consecutive same digits first
+            if (i + 2 < word.length && word[i] === word[i + 1] && word[i] === word[i + 2]) {
+              const code = word[i].repeat(3);
+              const found = Object.entries(codeMap).find(([_, v]) => v.unsimplified === code);
+              if (found) {
+                result += found[0];
+                i += 3;
+                continue;
               }
             }
-            return false;
-          };
-
-          while (i < word.length) {
-            const digit = word[i];
-            // Try 3 digits first
-            if (tryMatch(digit, 3)) continue;
-            // Then try 2 digits
-            if (tryMatch(digit, 2)) continue;
+            
+            // Then try to match two consecutive same digits
+            if (i + 1 < word.length && word[i] === word[i + 1]) {
+              const code = word[i].repeat(2);
+              const found = Object.entries(codeMap).find(([_, v]) => v.unsimplified === code);
+              if (found) {
+                result += found[0];
+                i += 2;
+                continue;
+              }
+            }
+            
             // Finally try single digit
-            const found = Object.entries(codeMap).find(([_, v]) => v.unsimplified === digit);
-            result += found ? found[0] : digit;
+            const code = word[i];
+            const found = Object.entries(codeMap).find(([_, v]) => v.unsimplified === code);
+            result += found ? found[0] : code;
             i++;
           }
           return result;
