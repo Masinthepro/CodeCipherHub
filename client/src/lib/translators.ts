@@ -281,7 +281,8 @@ export const translators = {
             } else {
               // Single number
               const code = word[i];
-              result += Object.entries(codeMap).find(([_, v]) => v.unsimplified === code)?.[0] || code;
+              const found = Object.entries(codeMap).find(([_, v]) => v.unsimplified === code);
+              result += found ? found[0] : code;
               i++;
             }
           }
