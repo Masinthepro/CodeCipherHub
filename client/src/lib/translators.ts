@@ -128,9 +128,19 @@ export const translators = {
       return text.toUpperCase().split('').map(char => baconMap[char] || char).join(' ');
     },
     decode: (bacon: string): string => {
-      const reverseBaconMap: Record<string, string> = Object.fromEntries(
-        Object.entries(translators.bacon.encode('')).map(([k, v]) => [v, k])
-      );
+      const baconMap: Record<string, string> = {
+        'A': 'AAAAA', 'B': 'AAAAB', 'C': 'AAABA', 'D': 'AAABB', 'E': 'AABAA',
+        'F': 'AABAB', 'G': 'AABBA', 'H': 'AABBB', 'I': 'ABAAA', 'J': 'ABAAB',
+        'K': 'ABABA', 'L': 'ABABB', 'M': 'ABBAA', 'N': 'ABBAB', 'O': 'ABBBA',
+        'P': 'ABBBB', 'Q': 'BAAAA', 'R': 'BAAAB', 'S': 'BAABA', 'T': 'BAABB',
+        'U': 'BABAA', 'V': 'BABAB', 'W': 'BABBA', 'X': 'BABBB', 'Y': 'BBAAA',
+        'Z': 'BBAAB'
+      };
+      // Create reverse mapping
+      const reverseBaconMap: Record<string, string> = {};
+      for (const [char, code] of Object.entries(baconMap)) {
+        reverseBaconMap[code] = char;
+      }
       return bacon.split(' ').map(code => reverseBaconMap[code] || code).join('');
     }
   },
