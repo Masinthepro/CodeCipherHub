@@ -268,23 +268,48 @@ export const translators = {
           let result = '';
           let i = 0;
           while (i < word.length) {
-            // Try to match the longest possible sequence first
             let matched = false;
-            let j = Math.min(3, word.length - i);
             
-            while (j > 0 && !matched) {
-              const code = word.slice(i, i + j);
-              const found = Object.entries(codeMap).find(([_, v]) => v.unsimplified === code);
-              if (found) {
-                result += found[0];
-                i += j;
-                matched = true;
+            // Check for groups of 3 consecutive same digits
+            if (i + 2 < word.length && 
+                word[i] === word[i + 1] && 
+                word[i] === word[i + 2]) {
+              const threeDigits = word[i].repeat(3);
+              for (const [letter, codes] of Object.entries(codeMap)) {
+                if (codes.unsimplified === threeDigits) {
+                  result += letter;
+                  i += 3;
+                  matched = true;
+                  break;
+                }
               }
-              j--;
             }
             
+            // Check for groups of 2 consecutive same digits
+            if (!matched && i + 1 < word.length && 
+                word[i] === word[i + 1]) {
+              const twoDigits = word[i].repeat(2);
+              for (const [letter, codes] of Object.entries(codeMap)) {
+                if (codes.unsimplified === twoDigits) {
+                  result += letter;
+                  i += 2;
+                  matched = true;
+                  break;
+                }
+              }
+            }
+            
+            // Finally try single digits
             if (!matched) {
-              result += word[i];
+              let found = false;
+              for (const [letter, codes] of Object.entries(codeMap)) {
+                if (codes.unsimplified === word[i]) {
+                  result += letter;
+                  found = true;
+                  break;
+                }
+              }
+              if (!found) result += word[i];
               i++;
             }
           }
