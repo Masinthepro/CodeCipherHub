@@ -181,6 +181,11 @@ export const translators = {
 
   oneZeroOne: {
     encode: (text: string, method: string = 'simplified'): string => {
+      const normalizedMethod = method?.toLowerCase() || 'simplified';
+      if (!['simplified', 'xmethod', 'unsimplified'].includes(normalizedMethod)) {
+        throw new Error('Invalid method. Use: simplified, xMethod, or unsimplified');
+      }
+
       const codeMap: Record<string, { simplified: string; xMethod: string; unsimplified: string }> = {
         'A': { simplified: '1', xMethod: 'X1', unsimplified: '1' },
         'B': { simplified: '2', xMethod: 'X2', unsimplified: '2' },
@@ -213,11 +218,20 @@ export const translators = {
       return text.toUpperCase().split('').map(char => {
         if (char === ' ') return ' ';
         const codes = codeMap[char];
-        return codes ? codes[method as keyof typeof codes] : char;
+        return codes ? codes[normalizedMethod] : char;
       }).join('');
     },
     decode: (encoded: string, method: string = 'simplified'): string => {
-      const codeMap: Record<string, { simplified: string; xMethod: string; unsimplified: string }> = {
+      const normalizedMethod = method?.toLowerCase() || 'simplified';
+      if (!['simplified', 'xmethod', 'unsimplified'].includes(normalizedMethod)) {
+        throw new Error('Invalid method. Use: simplified, xMethod, or unsimplified');
+      }
+
+      // Create a mapping of codes to letters for the selected method
+      const reverseMap = new Map<string, string>();
+      const allCodes: Array<[string, string]> = [];
+
+      for (const [letter, codes] of Object.entries({
         'A': { simplified: '1', xMethod: 'X1', unsimplified: '1' },
         'B': { simplified: '2', xMethod: 'X2', unsimplified: '2' },
         'C': { simplified: '3', xMethod: 'X3', unsimplified: '3' },
@@ -244,36 +258,39 @@ export const translators = {
         'X': { simplified: '6Z', xMethod: '6XX', unsimplified: '666' },
         'Y': { simplified: '7Z', xMethod: '7XX', unsimplified: '777' },
         'Z': { simplified: '8Z', xMethod: '8XX', unsimplified: '888' }
-      };
-
-      // Create reverse mapping for the selected method
-      const reverseMap: Record<string, string> = {};
-      Object.entries(codeMap).forEach(([char, codes]) => {
-        reverseMap[codes[method as keyof typeof codes]] = char;
-      });
-
-      // Split the input into chunks that match the encoding pattern
-      let result = '';
-      let buffer = '';
-
-      for (let i = 0; i < encoded.length; i++) {
-        if (encoded[i] === ' ') {
-          if (buffer) {
-            result += reverseMap[buffer] || buffer;
-            buffer = '';
-          }
-          result += ' ';
-        } else {
-          buffer += encoded[i];
-          if (reverseMap[buffer]) {
-            result += reverseMap[buffer];
-            buffer = '';
-          }
-        }
+      })) {
+        const code = codes[normalizedMethod as keyof typeof codes];
+        reverseMap.set(code, letter);
+        allCodes.push([code, letter]);
       }
 
-      if (buffer) {
-        result += reverseMap[buffer] || buffer;
+      // Sort codes by length (longest first) to ensure proper matching
+      allCodes.sort((a, b) => b[0].length - a[0].length);
+
+      let result = '';
+      let currentPosition = 0;
+
+      while (currentPosition < encoded.length) {
+        if (encoded[currentPosition] === ' ') {
+          result += ' ';
+          currentPosition++;
+          continue;
+        }
+
+        let found = false;
+        for (const [code, letter] of allCodes) {
+          if (encoded.startsWith(code, currentPosition)) {
+            result += letter;
+            currentPosition += code.length;
+            found = true;
+            break;
+          }
+        }
+
+        if (!found) {
+          result += encoded[currentPosition];
+          currentPosition++;
+        }
       }
 
       return result;
