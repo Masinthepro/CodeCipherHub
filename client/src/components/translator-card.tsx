@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { translators } from '@/lib/translators';
-import { apiRequest } from '@/lib/queryClient';
 
 interface TranslatorCardProps {
   title: string;
@@ -26,25 +25,12 @@ export function TranslatorCard({
   const [key, setKey] = useState('');
   const { toast } = useToast();
 
-  const saveTranslation = async (input: string, output: string, type: string) => {
-    try {
-      await apiRequest('POST', '/api/translations', {
-        input,
-        output,
-        type
-      });
-    } catch (error) {
-      console.error('Failed to save translation:', error);
-    }
-  };
-
-  const handleEncode = useCallback(async () => {
+  const handleEncode = useCallback(() => {
     try {
       const result = requiresKey 
         ? translators[type].encode(input, key || undefined)
         : translators[type].encode(input);
       setOutput(result);
-      await saveTranslation(input, result, type);
     } catch (error) {
       toast({
         title: 'Error',
@@ -54,13 +40,12 @@ export function TranslatorCard({
     }
   }, [input, type, key, requiresKey, toast]);
 
-  const handleDecode = useCallback(async () => {
+  const handleDecode = useCallback(() => {
     try {
       const result = requiresKey
         ? translators[type].decode(input, key || undefined)
         : translators[type].decode(input);
       setOutput(result);
-      await saveTranslation(input, result, type);
     } catch (error) {
       toast({
         title: 'Error',
