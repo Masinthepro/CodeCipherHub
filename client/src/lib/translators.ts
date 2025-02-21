@@ -268,33 +268,22 @@ export const translators = {
           let result = '';
           let i = 0;
           while (i < word.length) {
-            // Try to match three consecutive same digits first
-            if (i + 2 < word.length && word[i] === word[i + 1] && word[i] === word[i + 2]) {
-              const code = word[i].repeat(3);
-              const found = Object.entries(codeMap).find(([_, v]) => v.unsimplified === code);
-              if (found) {
-                result += found[0];
-                i += 3;
-                continue;
+            let matched = false;
+            // Try to find a matching triple first
+            for (const [letter, codes] of Object.entries(codeMap)) {
+              const unsimplified = codes.unsimplified;
+              if (word.slice(i, i + unsimplified.length) === unsimplified) {
+                result += letter;
+                i += unsimplified.length;
+                matched = true;
+                break;
               }
             }
-            
-            // Then try to match two consecutive same digits
-            if (i + 1 < word.length && word[i] === word[i + 1]) {
-              const code = word[i].repeat(2);
-              const found = Object.entries(codeMap).find(([_, v]) => v.unsimplified === code);
-              if (found) {
-                result += found[0];
-                i += 2;
-                continue;
-              }
+            if (!matched) {
+              // If no match found, keep the character as is
+              result += word[i];
+              i++;
             }
-            
-            // Finally try single digit
-            const code = word[i];
-            const found = Object.entries(codeMap).find(([_, v]) => v.unsimplified === code);
-            result += found ? found[0] : code;
-            i++;
           }
           return result;
         }).join(' ');
