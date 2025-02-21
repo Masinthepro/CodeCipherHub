@@ -227,11 +227,7 @@ export const translators = {
         throw new Error('Invalid method. Use: simplified, xMethod, or unsimplified');
       }
 
-      // Create a mapping of codes to letters for the selected method
-      const reverseMap = new Map<string, string>();
-      const allCodes: Array<[string, string]> = [];
-
-      for (const [letter, codes] of Object.entries({
+      const codeMap: Record<string, { simplified: string; xmethod: string; unsimplified: string }> = {
         'A': { simplified: '1', xmethod: 'X1', unsimplified: '1' },
         'B': { simplified: '2', xmethod: 'X2', unsimplified: '2' },
         'C': { simplified: '3', xmethod: 'X3', unsimplified: '3' },
@@ -258,43 +254,57 @@ export const translators = {
         'X': { simplified: '6Z', xmethod: '6XX', unsimplified: '666' },
         'Y': { simplified: '7Z', xmethod: '7XX', unsimplified: '777' },
         'Z': { simplified: '8Z', xmethod: '8XX', unsimplified: '888' }
-      })) {
-        const code = codes[normalizedMethod as keyof typeof codes];
-        reverseMap.set(code, letter);
-        allCodes.push([code, letter]);
+      };
+
+      // Create reverse mapping for the selected method
+      const reverseMap: Record<string, string> = {};
+      for (const [letter, codes] of Object.entries(codeMap)) {
+        reverseMap[codes[normalizedMethod]] = letter;
       }
 
-      // Sort codes by length (longest first) to ensure proper matching
-      allCodes.sort((a, b) => b[0].length - a[0].length);
-
-      let result = '';
-      let currentPosition = 0;
-
-      while (currentPosition < encoded.length) {
-        if (encoded[currentPosition] === ' ') {
-          result += ' ';
-          currentPosition++;
-          continue;
-        }
-
-        let found = false;
-        for (const [code, letter] of allCodes) {
-          if (encoded.startsWith(code, currentPosition)) {
-            result += letter;
-            currentPosition += code.length;
-            found = true;
-            break;
+      // For unsimplified method, we need to process numbers in groups of 3 or 1
+      if (normalizedMethod === 'unsimplified') {
+        return encoded.split(' ').map(word => {
+          let result = '';
+          let i = 0;
+          while (i < word.length) {
+            if (i + 2 < word.length && word[i] === word[i + 1] && word[i] === word[i + 2]) {
+              // Group of three same numbers
+              const code = word.slice(i, i + 3);
+              result += Object.entries(codeMap).find(([_, v]) => v.unsimplified === code)?.[0] || code;
+              i += 3;
+            } else {
+              // Single number
+              const code = word[i];
+              result += Object.entries(codeMap).find(([_, v]) => v.unsimplified === code)?.[0] || code;
+              i++;
+            }
           }
-        }
-
-        if (!found) {
-          // If no valid code is found, treat the current character as literal
-          result += encoded[currentPosition];
-          currentPosition++;
-        }
+          return result;
+        }).join(' ');
       }
 
-      return result;
+      // For simplified and xmethod
+      return encoded.split(' ').map(word => {
+        let result = '';
+        let i = 0;
+        while (i < word.length) {
+          // Try to match 2 characters first (for codes like '1X', '2X', etc)
+          if (i + 1 < word.length) {
+            const twoChar = word.slice(i, i + 2);
+            if (reverseMap[twoChar]) {
+              result += reverseMap[twoChar];
+              i += 2;
+              continue;
+            }
+          }
+          // Then try single character
+          const oneChar = word[i];
+          result += reverseMap[oneChar] || oneChar;
+          i++;
+        }
+        return result;
+      }).join(' ');
     }
   },
 };
