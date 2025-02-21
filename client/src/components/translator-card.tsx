@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { translators } from '@/lib/translators';
+import { useAudio } from '@/lib/audio';
+import { Play } from 'lucide-react';
 
 interface TranslatorCardProps {
   title: string;
@@ -24,6 +26,7 @@ export function TranslatorCard({
   const [output, setOutput] = useState('');
   const [key, setKey] = useState('');
   const { toast } = useToast();
+  const { playMorseCode } = useAudio();
 
   const handleEncode = useCallback(() => {
     try {
@@ -62,6 +65,20 @@ export function TranslatorCard({
       description: 'Output copied to clipboard',
     });
   }, [output, toast]);
+
+  const handlePlayMorse = useCallback(async () => {
+    if (type === 'morse' && output) {
+      try {
+        await playMorseCode(output);
+      } catch (error) {
+        toast({
+          title: 'Error',
+          description: 'Failed to play Morse code audio',
+          variant: 'destructive',
+        });
+      }
+    }
+  }, [output, type, playMorseCode, toast]);
 
   return (
     <Card className="w-full bg-black/50 border-green-500 backdrop-blur-sm">
@@ -103,14 +120,27 @@ export function TranslatorCard({
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <p className="text-sm text-green-400">Output:</p>
-            <Button
-              onClick={handleCopy}
-              variant="ghost"
-              className="text-green-500 hover:text-green-400"
-              size="sm"
-            >
-              Copy
-            </Button>
+            <div className="flex gap-2">
+              {type === 'morse' && output && (
+                <Button
+                  onClick={handlePlayMorse}
+                  variant="ghost"
+                  className="text-green-500 hover:text-green-400"
+                  size="sm"
+                >
+                  <Play className="w-4 h-4 mr-1" />
+                  Play
+                </Button>
+              )}
+              <Button
+                onClick={handleCopy}
+                variant="ghost"
+                className="text-green-500 hover:text-green-400"
+                size="sm"
+              >
+                Copy
+              </Button>
+            </div>
           </div>
           <div className="p-2 min-h-[2.5rem] bg-black/30 border border-green-500 rounded-md">
             <p className="text-green-400 break-all">{output}</p>
