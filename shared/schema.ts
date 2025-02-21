@@ -28,4 +28,6 @@ export const translationTypes = [
   "leetspeak",
   "atbash",
   "bacon",
+  "caesar",
+  "vigenere"
 ] as const;

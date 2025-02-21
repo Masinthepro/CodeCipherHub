@@ -9,16 +9,27 @@ interface TranslatorCardProps {
   title: string;
   type: keyof typeof translators;
   description: string;
+  requiresKey?: boolean;
+  keyPlaceholder?: string;
 }
 
-export function TranslatorCard({ title, type, description }: TranslatorCardProps) {
+export function TranslatorCard({ 
+  title, 
+  type, 
+  description,
+  requiresKey,
+  keyPlaceholder = "Enter key..."
+}: TranslatorCardProps) {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
+  const [key, setKey] = useState('');
   const { toast } = useToast();
 
   const handleEncode = useCallback(() => {
     try {
-      const result = translators[type].encode(input);
+      const result = requiresKey 
+        ? translators[type].encode(input, key || undefined)
+        : translators[type].encode(input);
       setOutput(result);
     } catch (error) {
       toast({
@@ -27,11 +38,13 @@ export function TranslatorCard({ title, type, description }: TranslatorCardProps
         variant: 'destructive',
       });
     }
-  }, [input, type, toast]);
+  }, [input, type, key, requiresKey, toast]);
 
   const handleDecode = useCallback(() => {
     try {
-      const result = translators[type].decode(input);
+      const result = requiresKey
+        ? translators[type].decode(input, key || undefined)
+        : translators[type].decode(input);
       setOutput(result);
     } catch (error) {
       toast({
@@ -40,7 +53,7 @@ export function TranslatorCard({ title, type, description }: TranslatorCardProps
         variant: 'destructive',
       });
     }
-  }, [input, type, toast]);
+  }, [input, type, key, requiresKey, toast]);
 
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(output);
@@ -64,6 +77,14 @@ export function TranslatorCard({ title, type, description }: TranslatorCardProps
             className="bg-black/30 border-green-500 text-green-400 placeholder:text-green-700"
             placeholder="Enter text to translate..."
           />
+          {requiresKey && (
+            <Input
+              value={key}
+              onChange={(e) => setKey(e.target.value)}
+              className="bg-black/30 border-green-500 text-green-400 placeholder:text-green-700 mt-2"
+              placeholder={keyPlaceholder}
+            />
+          )}
         </div>
         <div className="flex space-x-2">
           <Button

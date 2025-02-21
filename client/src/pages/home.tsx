@@ -56,6 +56,20 @@ export default function Home() {
             type="bacon"
             description="Convert text to sequences of A's and B's"
           />
+          <TranslatorCard
+            title="Caesar Cipher"
+            type="caesar"
+            description="Shift each letter in the text by a fixed number of positions (default shift: 3)"
+            requiresKey
+            keyPlaceholder="Enter shift number (default: 3)"
+          />
+          <TranslatorCard
+            title="Vigenère Cipher"
+            type="vigenere"
+            description="Polyalphabetic substitution using a keyword (default: 'KEY')"
+            requiresKey
+            keyPlaceholder="Enter keyword (default: KEY)"
+          />
         </div>
       </div>
     </div>

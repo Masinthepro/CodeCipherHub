@@ -13,7 +13,7 @@ export const translators = {
         .join('');
     }
   },
-  
+
   hexadecimal: {
     encode: (text: string): string => {
       return text
@@ -28,7 +28,7 @@ export const translators = {
         .join('');
     }
   },
-  
+
   base64: {
     encode: (text: string): string => {
       return btoa(text);
@@ -37,7 +37,7 @@ export const translators = {
       return atob(base64);
     }
   },
-  
+
   morse: {
     encode: (text: string): string => {
       const morseCode: Record<string, string> = {
@@ -60,7 +60,7 @@ export const translators = {
       return morse.split(' ').map(code => morseCode[code] || code).join('');
     }
   },
-  
+
   piglatin: {
     encode: (text: string): string => {
       return text.split(' ').map(word => {
@@ -85,7 +85,7 @@ export const translators = {
       }).join(' ');
     }
   },
-  
+
   leetspeak: {
     encode: (text: string): string => {
       const leetMap: Record<string, string> = {
@@ -100,7 +100,7 @@ export const translators = {
       return leet.split('').map(char => reverseLeetMap[char] || char).join('');
     }
   },
-  
+
   atbash: {
     encode: (text: string): string => {
       return text.split('').map(char => {
@@ -114,7 +114,7 @@ export const translators = {
       return translators.atbash.encode(atbash); // Atbash is its own inverse
     }
   },
-  
+
   bacon: {
     encode: (text: string): string => {
       const baconMap: Record<string, string> = {
@@ -133,5 +133,69 @@ export const translators = {
       );
       return bacon.split(' ').map(code => reverseBaconMap[code] || code).join('');
     }
-  }
+  },
+  caesar: {
+    encode: (text: string, shift: number = 3): string => {
+      return text.split('').map(char => {
+        if (char.match(/[a-zA-Z]/)) {
+          const code = char.charCodeAt(0);
+          const isUpperCase = code >= 65 && code <= 90;
+          const base = isUpperCase ? 65 : 97;
+          return String.fromCharCode(((code - base + shift) % 26 + 26) % 26 + base);
+        }
+        return char;
+      }).join('');
+    },
+    decode: (text: string, shift: number = 3): string => {
+      return translators.caesar.encode(text, 26 - shift);
+    }
+  },
+
+  vigenere: {
+    encode: (text: string, key: string = 'KEY'): string => {
+      const normalizedKey = key.toUpperCase().replace(/[^A-Z]/g, '');
+      if (!normalizedKey) return text;
+
+      let result = '';
+      let keyIndex = 0;
+
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        if (char.match(/[a-zA-Z]/)) {
+          const isUpperCase = char === char.toUpperCase();
+          const baseChar = char.toUpperCase();
+          const shift = normalizedKey[keyIndex % normalizedKey.length].charCodeAt(0) - 65;
+          const shifted = String.fromCharCode(((baseChar.charCodeAt(0) - 65 + shift) % 26) + 65);
+          result += isUpperCase ? shifted : shifted.toLowerCase();
+          keyIndex++;
+        } else {
+          result += char;
+        }
+      }
+      return result;
+    },
+    decode: (text: string, key: string = 'KEY'): string => {
+      const normalizedKey = key.toUpperCase().replace(/[^A-Z]/g, '');
+      if (!normalizedKey) return text;
+
+      let result = '';
+      let keyIndex = 0;
+
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        if (char.match(/[a-zA-Z]/)) {
+          const isUpperCase = char === char.toUpperCase();
+          const baseChar = char.toUpperCase();
+          const shift = normalizedKey[keyIndex % normalizedKey.length].charCodeAt(0) - 65;
+          const shifted = String.fromCharCode(((baseChar.charCodeAt(0) - 65 - shift + 26) % 26) + 65);
+          result += isUpperCase ? shifted : shifted.toLowerCase();
+          keyIndex++;
+        } else {
+          result += char;
+        }
+      }
+      return result;
+    }
+  },
+
 };
