@@ -186,33 +186,33 @@ export const translators = {
         throw new Error('Invalid method. Use: simplified, xMethod, or unsimplified');
       }
 
-      const codeMap: Record<string, { simplified: string; xMethod: string; unsimplified: string }> = {
-        'A': { simplified: '1', xMethod: 'X1', unsimplified: '1' },
-        'B': { simplified: '2', xMethod: 'X2', unsimplified: '2' },
-        'C': { simplified: '3', xMethod: 'X3', unsimplified: '3' },
-        'D': { simplified: '4', xMethod: 'X4', unsimplified: '4' },
-        'E': { simplified: '5', xMethod: 'X5', unsimplified: '5' },
-        'F': { simplified: '6', xMethod: 'X6', unsimplified: '6' },
-        'G': { simplified: '7', xMethod: 'X7', unsimplified: '7' },
-        'H': { simplified: '8', xMethod: 'X8', unsimplified: '8' },
-        'I': { simplified: '9', xMethod: 'X9', unsimplified: '9' },
-        'J': { simplified: '1X', xMethod: '1X', unsimplified: '11' },
-        'K': { simplified: '2X', xMethod: '2X', unsimplified: '22' },
-        'L': { simplified: '3X', xMethod: '3X', unsimplified: '33' },
-        'M': { simplified: '4X', xMethod: '4X', unsimplified: '44' },
-        'N': { simplified: '5X', xMethod: '5X', unsimplified: '55' },
-        'O': { simplified: '6X', xMethod: '6X', unsimplified: '66' },
-        'P': { simplified: '7X', xMethod: '7X', unsimplified: '77' },
-        'Q': { simplified: '8X', xMethod: '8X', unsimplified: '88' },
-        'R': { simplified: '9X', xMethod: '9X', unsimplified: '99' },
-        'S': { simplified: '1Z', xMethod: '1XX', unsimplified: '111' },
-        'T': { simplified: '2Z', xMethod: '2XX', unsimplified: '222' },
-        'U': { simplified: '3Z', xMethod: '3XX', unsimplified: '333' },
-        'V': { simplified: '4Z', xMethod: '4XX', unsimplified: '444' },
-        'W': { simplified: '5Z', xMethod: '5XX', unsimplified: '555' },
-        'X': { simplified: '6Z', xMethod: '6XX', unsimplified: '666' },
-        'Y': { simplified: '7Z', xMethod: '7XX', unsimplified: '777' },
-        'Z': { simplified: '8Z', xMethod: '8XX', unsimplified: '888' }
+      const codeMap: Record<string, { simplified: string; xmethod: string; unsimplified: string }> = {
+        'A': { simplified: '1', xmethod: 'X1', unsimplified: '1' },
+        'B': { simplified: '2', xmethod: 'X2', unsimplified: '2' },
+        'C': { simplified: '3', xmethod: 'X3', unsimplified: '3' },
+        'D': { simplified: '4', xmethod: 'X4', unsimplified: '4' },
+        'E': { simplified: '5', xmethod: 'X5', unsimplified: '5' },
+        'F': { simplified: '6', xmethod: 'X6', unsimplified: '6' },
+        'G': { simplified: '7', xmethod: 'X7', unsimplified: '7' },
+        'H': { simplified: '8', xmethod: 'X8', unsimplified: '8' },
+        'I': { simplified: '9', xmethod: 'X9', unsimplified: '9' },
+        'J': { simplified: '1X', xmethod: '1X', unsimplified: '11' },
+        'K': { simplified: '2X', xmethod: '2X', unsimplified: '22' },
+        'L': { simplified: '3X', xmethod: '3X', unsimplified: '33' },
+        'M': { simplified: '4X', xmethod: '4X', unsimplified: '44' },
+        'N': { simplified: '5X', xmethod: '5X', unsimplified: '55' },
+        'O': { simplified: '6X', xmethod: '6X', unsimplified: '66' },
+        'P': { simplified: '7X', xmethod: '7X', unsimplified: '77' },
+        'Q': { simplified: '8X', xmethod: '8X', unsimplified: '88' },
+        'R': { simplified: '9X', xmethod: '9X', unsimplified: '99' },
+        'S': { simplified: '1Z', xmethod: '1XX', unsimplified: '111' },
+        'T': { simplified: '2Z', xmethod: '2XX', unsimplified: '222' },
+        'U': { simplified: '3Z', xmethod: '3XX', unsimplified: '333' },
+        'V': { simplified: '4Z', xmethod: '4XX', unsimplified: '444' },
+        'W': { simplified: '5Z', xmethod: '5XX', unsimplified: '555' },
+        'X': { simplified: '6Z', xmethod: '6XX', unsimplified: '666' },
+        'Y': { simplified: '7Z', xmethod: '7XX', unsimplified: '777' },
+        'Z': { simplified: '8Z', xmethod: '8XX', unsimplified: '888' }
       };
 
       return text.toUpperCase().split('').map(char => {
@@ -232,32 +232,32 @@ export const translators = {
       const allCodes: Array<[string, string]> = [];
 
       for (const [letter, codes] of Object.entries({
-        'A': { simplified: '1', xMethod: 'X1', unsimplified: '1' },
-        'B': { simplified: '2', xMethod: 'X2', unsimplified: '2' },
-        'C': { simplified: '3', xMethod: 'X3', unsimplified: '3' },
-        'D': { simplified: '4', xMethod: 'X4', unsimplified: '4' },
-        'E': { simplified: '5', xMethod: 'X5', unsimplified: '5' },
-        'F': { simplified: '6', xMethod: 'X6', unsimplified: '6' },
-        'G': { simplified: '7', xMethod: 'X7', unsimplified: '7' },
-        'H': { simplified: '8', xMethod: 'X8', unsimplified: '8' },
-        'I': { simplified: '9', xMethod: 'X9', unsimplified: '9' },
-        'J': { simplified: '1X', xMethod: '1X', unsimplified: '11' },
-        'K': { simplified: '2X', xMethod: '2X', unsimplified: '22' },
-        'L': { simplified: '3X', xMethod: '3X', unsimplified: '33' },
-        'M': { simplified: '4X', xMethod: '4X', unsimplified: '44' },
-        'N': { simplified: '5X', xMethod: '5X', unsimplified: '55' },
-        'O': { simplified: '6X', xMethod: '6X', unsimplified: '66' },
-        'P': { simplified: '7X', xMethod: '7X', unsimplified: '77' },
-        'Q': { simplified: '8X', xMethod: '8X', unsimplified: '88' },
-        'R': { simplified: '9X', xMethod: '9X', unsimplified: '99' },
-        'S': { simplified: '1Z', xMethod: '1XX', unsimplified: '111' },
-        'T': { simplified: '2Z', xMethod: '2XX', unsimplified: '222' },
-        'U': { simplified: '3Z', xMethod: '3XX', unsimplified: '333' },
-        'V': { simplified: '4Z', xMethod: '4XX', unsimplified: '444' },
-        'W': { simplified: '5Z', xMethod: '5XX', unsimplified: '555' },
-        'X': { simplified: '6Z', xMethod: '6XX', unsimplified: '666' },
-        'Y': { simplified: '7Z', xMethod: '7XX', unsimplified: '777' },
-        'Z': { simplified: '8Z', xMethod: '8XX', unsimplified: '888' }
+        'A': { simplified: '1', xmethod: 'X1', unsimplified: '1' },
+        'B': { simplified: '2', xmethod: 'X2', unsimplified: '2' },
+        'C': { simplified: '3', xmethod: 'X3', unsimplified: '3' },
+        'D': { simplified: '4', xmethod: 'X4', unsimplified: '4' },
+        'E': { simplified: '5', xmethod: 'X5', unsimplified: '5' },
+        'F': { simplified: '6', xmethod: 'X6', unsimplified: '6' },
+        'G': { simplified: '7', xmethod: 'X7', unsimplified: '7' },
+        'H': { simplified: '8', xmethod: 'X8', unsimplified: '8' },
+        'I': { simplified: '9', xmethod: 'X9', unsimplified: '9' },
+        'J': { simplified: '1X', xmethod: '1X', unsimplified: '11' },
+        'K': { simplified: '2X', xmethod: '2X', unsimplified: '22' },
+        'L': { simplified: '3X', xmethod: '3X', unsimplified: '33' },
+        'M': { simplified: '4X', xmethod: '4X', unsimplified: '44' },
+        'N': { simplified: '5X', xmethod: '5X', unsimplified: '55' },
+        'O': { simplified: '6X', xmethod: '6X', unsimplified: '66' },
+        'P': { simplified: '7X', xmethod: '7X', unsimplified: '77' },
+        'Q': { simplified: '8X', xmethod: '8X', unsimplified: '88' },
+        'R': { simplified: '9X', xmethod: '9X', unsimplified: '99' },
+        'S': { simplified: '1Z', xmethod: '1XX', unsimplified: '111' },
+        'T': { simplified: '2Z', xmethod: '2XX', unsimplified: '222' },
+        'U': { simplified: '3Z', xmethod: '3XX', unsimplified: '333' },
+        'V': { simplified: '4Z', xmethod: '4XX', unsimplified: '444' },
+        'W': { simplified: '5Z', xmethod: '5XX', unsimplified: '555' },
+        'X': { simplified: '6Z', xmethod: '6XX', unsimplified: '666' },
+        'Y': { simplified: '7Z', xmethod: '7XX', unsimplified: '777' },
+        'Z': { simplified: '8Z', xmethod: '8XX', unsimplified: '888' }
       })) {
         const code = codes[normalizedMethod as keyof typeof codes];
         reverseMap.set(code, letter);
@@ -288,6 +288,7 @@ export const translators = {
         }
 
         if (!found) {
+          // If no valid code is found, treat the current character as literal
           result += encoded[currentPosition];
           currentPosition++;
         }
