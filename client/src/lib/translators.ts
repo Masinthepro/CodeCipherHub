@@ -273,6 +273,11 @@ export const translators = {
               const code = word.slice(i, i + 3);
               result += Object.entries(codeMap).find(([_, v]) => v.unsimplified === code)?.[0] || code;
               i += 3;
+            } else if (i + 1 < word.length && word[i] === word[i + 1]) {
+              // Group of two same numbers
+              const code = word.slice(i, i + 2);
+              result += Object.entries(codeMap).find(([_, v]) => v.unsimplified === code)?.[0] || code;
+              i += 2;
             } else {
               // Single number
               const code = word[i];
